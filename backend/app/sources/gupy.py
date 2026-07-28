@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 import httpx
 
 from app.core.config import settings
-from app.core.expansions import expand_roles, expand_levels
+from app.core.expansions import expand_roles_multi, expand_levels
 from app.schemas.job import JobCreate
 from app.schemas.search import SearchFilters
 from app.sources.base import BaseSource
@@ -48,9 +48,10 @@ class GupySource(BaseSource):
     name = "gupy"
 
     async def search(self, filters: SearchFilters) -> list[JobCreate]:
-        role_terms = expand_roles(filters.role)
+        roles = filters.roles or ([filters.role] if filters.role else [])
+        role_terms = expand_roles_multi(roles)
         if not role_terms:
-            role_terms = [filters.role]
+            role_terms = roles
 
         level_terms: list[str] = []
         for lvl in filters.levels:
@@ -59,7 +60,7 @@ class GupySource(BaseSource):
         all_jobs: list[JobCreate] = []
 
         # Search with primary role term and a couple of key expansions
-        search_terms = list(dict.fromkeys([filters.role] + role_terms[:3]))
+        search_terms = list(dict.fromkeys(roles + role_terms[:4]))
 
         async with httpx.AsyncClient(
             timeout=settings.request_timeout,

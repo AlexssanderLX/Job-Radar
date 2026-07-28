@@ -17,6 +17,7 @@ from app.sources.lever import LeverSource
 from app.sources.gupy import GupySource
 from app.sources.github import GitHubSource
 from app.sources.manual_search import ManualSearchSource
+from app.sources.web_search import IndexedWebSearchSource
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ ALL_SOURCES = [
     LeverSource(),
     GupySource(),
     GitHubSource(),
+    IndexedWebSearchSource(),
     ManualSearchSource(),
 ]
 

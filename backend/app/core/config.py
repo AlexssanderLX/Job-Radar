@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     cache_ttl_seconds: int = 300
     max_response_bytes: int = 5 * 1024 * 1024  # 5 MB
     user_agent: str = "JobRadar/1.0 (local job aggregator; educational use)"
+    web_search_provider: str = ""
+    web_search_api_key: str = ""
+    web_search_endpoint: str = "https://google.serper.dev/search"
 
     class Config:
         env_file = ".env"
