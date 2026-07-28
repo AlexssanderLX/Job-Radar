@@ -80,6 +80,7 @@ class SearchResult(BaseModel):
     sources_failed: list[str]
     duration_seconds: float
     jobs: list
+    source_progress: list[dict] = []
 
 
 class SavedFilterCreate(BaseModel):

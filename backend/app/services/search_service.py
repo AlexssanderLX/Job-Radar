@@ -52,19 +52,28 @@ async def run_search(filters: SearchFilters, db: AsyncSession) -> SearchResult:
     raw_jobs: list[JobCreate] = []
     failed_sources: list[str] = []
     searched_sources: list[str] = []
+    source_progress: list[dict] = []
 
     async def fetch_source(source):
+        source_start = time.monotonic()
         try:
             jobs = await source.search(filters)
-            return source.name, jobs, None
+            return source.name, jobs, None, time.monotonic() - source_start, source.is_manual
         except Exception as e:
             logger.warning("Source %s failed: %s", source.name, e)
-            return source.name, [], str(e)
+            return source.name, [], str(e), time.monotonic() - source_start, source.is_manual
 
     results = await asyncio.gather(*[fetch_source(s) for s in active_sources])
 
-    for name, jobs, error in results:
+    for name, jobs, error, source_duration, is_manual in results:
         searched_sources.append(name)
+        source_progress.append({
+            "source": name,
+            "status": "error" if error else ("manual" if is_manual else ("completed" if jobs else "empty")),
+            "result_count": len(jobs),
+            "duration_seconds": round(source_duration, 2),
+            "error": error,
+        })
         if error:
             failed_sources.append(name)
         else:
@@ -182,4 +191,5 @@ async def run_search(filters: SearchFilters, db: AsyncSession) -> SearchResult:
         sources_failed=failed_sources,
         duration_seconds=round(duration, 2),
         jobs=job_reads,
+        source_progress=source_progress,
     )

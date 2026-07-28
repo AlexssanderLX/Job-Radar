@@ -87,6 +87,13 @@ export interface SearchResult {
   sources_failed: string[]
   duration_seconds: number
   jobs: Job[]
+  source_progress: Array<{
+    source: string
+    status: 'completed' | 'empty' | 'error' | 'manual'
+    result_count: number
+    duration_seconds: number
+    error: string | null
+  }>
 }
 
 export interface SavedFilter {

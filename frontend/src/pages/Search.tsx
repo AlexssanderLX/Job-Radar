@@ -70,8 +70,8 @@ function JobRow({ job, onFavorite, onHide, onAccess }: {
               )}
             </div>
           )}
-          {job.match_summary && !job.is_manual && (
-            <p className="text-xs text-zinc-500 mt-1 truncate">{job.match_summary}</p>
+          {(job.summary || job.match_summary) && !job.is_manual && (
+            <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{job.summary || job.match_summary}</p>
           )}
           {job.is_manual && job.description && (
             <p className="text-xs text-zinc-500 mt-1">{job.description}</p>
@@ -136,6 +136,9 @@ export default function SearchPage() {
   const [minScore, setMinScore] = useState(0)
   const [showRefinement, setShowRefinement] = useState(false)
   const [showStrategy, setShowStrategy] = useState(false)
+  const [resultType, setResultType] = useState<'all' | 'job' | 'hiring_post' | 'career_page'>('all')
+  const [accessFilter, setAccessFilter] = useState<'all' | 'new' | 'accessed'>('all')
+  const [visibleCount, setVisibleCount] = useState(25)
 
   const [roles, setRoles] = useState<Role[]>([])
   const [skills, setSkills] = useState<Skill[]>([])
@@ -178,6 +181,7 @@ export default function SearchPage() {
       const res = await api.search({ ...filters, role: filters.roles[0] ?? null })
       setResult(res)
       setJobs(res.jobs)
+      setVisibleCount(25)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     } finally {
@@ -210,7 +214,13 @@ export default function SearchPage() {
     })
   }, [])
 
-  const autoJobs = jobs.filter((j) => !j.is_manual && j.match_score >= minScore)
+  const autoJobs = jobs.filter((j) => {
+    if (j.is_manual || j.match_score < minScore) return false
+    if (resultType !== 'all' && j.result_type !== resultType) return false
+    if (accessFilter === 'new' && j.has_been_accessed) return false
+    if (accessFilter === 'accessed' && !j.has_been_accessed) return false
+    return true
+  })
   const manualJobs = jobs.filter((j) => j.is_manual)
   const sortedAuto = [...autoJobs].sort((a, b) => {
     if (sortKey === 'match_score') return b.match_score - a.match_score
@@ -219,6 +229,7 @@ export default function SearchPage() {
     }
     return a.company.localeCompare(b.company, 'pt-BR')
   })
+  const visibleJobs = sortedAuto.slice(0, visibleCount)
 
   // Active filters for the summary bar
   const activeFilters: Array<{ key: string; label: string; onRemove: () => void }> = []
@@ -436,23 +447,42 @@ export default function SearchPage() {
                 </div>
               </div>
 
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {result.source_progress.map((source) => (
+                  <div key={source.source} className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900/30 px-3 py-2 text-xs">
+                    <span className="text-zinc-300">{SOURCE_LABELS[source.source] ?? source.source}</span>
+                    <span className={source.status === 'error' ? 'text-red-400' : source.status === 'empty' ? 'text-zinc-600' : source.status === 'manual' ? 'text-amber-400' : 'text-emerald-400'}>
+                      {source.status === 'error' ? 'Erro' : source.status === 'manual' ? 'Manual' : `${source.result_count} resultado(s)`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {([
+                  ['all', 'Todas'], ['job', 'Vagas'], ['hiring_post', 'Posts'], ['career_page', 'Carreiras'],
+                ] as const).map(([value, label]) => <button key={value} onClick={() => { setResultType(value); setVisibleCount(25) }} className={`rounded-md border px-2.5 py-1 text-xs ${resultType === value ? 'border-indigo-700 bg-indigo-950/50 text-indigo-300' : 'border-zinc-800 text-zinc-500'}`}>{label}</button>)}
+                <select aria-label="Filtrar acessos" value={accessFilter} onChange={(e) => { setAccessFilter(e.target.value as typeof accessFilter); setVisibleCount(25) }} className="h-7 rounded-md border border-zinc-800 bg-zinc-900 px-2 text-xs text-zinc-400"><option value="all">Todos os acessos</option><option value="new">Ainda não acessadas</option><option value="accessed">Já acessadas</option></select>
+              </div>
+
               {/* Auto jobs */}
               {sortedAuto.length > 0 && (
                 <div className="rounded-lg border border-zinc-800 overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-2 bg-zinc-800/50 border-b border-zinc-800">
                     <span className="text-xs font-semibold text-zinc-300">Automático ({sortedAuto.length})</span>
                   </div>
-                  {sortedAuto.map((job) => (
+                  {visibleJobs.map((job) => (
                     <JobRow key={job.id} job={job} onFavorite={handleFavorite} onHide={handleHide} onAccess={handleAccess} />
                   ))}
                 </div>
               )}
+              {visibleCount < sortedAuto.length && <div className="flex justify-center"><Button variant="outline" onClick={() => setVisibleCount((count) => count + 25)}>Carregar mais ({sortedAuto.length - visibleCount})</Button></div>}
 
               {/* Manual links */}
               {manualJobs.length > 0 && (
                 <div className="rounded-lg border border-zinc-800 overflow-hidden">
                   <div className="px-4 py-2 bg-zinc-800/50 border-b border-zinc-800">
-                    <span className="text-xs font-semibold text-zinc-300">Links de pesquisa ({manualJobs.length})</span>
+                    <div><span className="text-xs font-semibold text-zinc-300">Pesquisas externas ({manualJobs.length})</span><p className="mt-0.5 text-xs text-zinc-600">Use para ampliar os resultados quando uma fonte não puder ser consultada automaticamente.</p></div>
                   </div>
                   <div className="divide-y divide-zinc-800/50">
                     {manualJobs.map((job) => (
