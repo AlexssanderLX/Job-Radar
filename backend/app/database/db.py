@@ -18,6 +18,13 @@ async def run_migrations() -> None:
         "ALTER TABLE jobs ADD COLUMN status TEXT DEFAULT 'new'",
         "ALTER TABLE jobs ADD COLUMN applied_at TEXT",
         "ALTER TABLE jobs ADD COLUMN tags TEXT DEFAULT '[]'",
+        "ALTER TABLE jobs ADD COLUMN summary TEXT",
+        "ALTER TABLE jobs ADD COLUMN source_type TEXT DEFAULT 'connector'",
+        "ALTER TABLE jobs ADD COLUMN result_type TEXT DEFAULT 'job'",
+        "ALTER TABLE jobs ADD COLUMN query_origin TEXT",
+        "ALTER TABLE jobs ADD COLUMN raw_title TEXT",
+        "ALTER TABLE jobs ADD COLUMN raw_snippet TEXT",
+        "ALTER TABLE jobs ADD COLUMN related_sources TEXT DEFAULT '[]'",
     ]
     async with engine.begin() as conn:
         for sql in migrations:

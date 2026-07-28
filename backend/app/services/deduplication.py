@@ -3,6 +3,7 @@ Isolated, testable deduplication logic. No external calls.
 """
 from difflib import SequenceMatcher
 from app.schemas.job import JobCreate
+from app.services.result_normalization import normalize_url
 
 SIMILARITY_THRESHOLD = 0.85
 
@@ -68,7 +69,7 @@ def deduplicate_jobs(jobs: list[JobCreate]) -> list[JobCreate]:
 
         for i, existing in enumerate(seen):
             # same URL
-            if _normalize(job.url) == _normalize(existing.url):
+            if normalize_url(job.url) == normalize_url(existing.url):
                 duplicate_index = i
                 break
 
@@ -90,7 +91,12 @@ def deduplicate_jobs(jobs: list[JobCreate]) -> list[JobCreate]:
                 break
 
         if duplicate_index is not None:
-            seen[duplicate_index] = _prefer(seen[duplicate_index], job)
+            preferred = _prefer(seen[duplicate_index], job)
+            preferred.related_sources = list(dict.fromkeys(
+                seen[duplicate_index].related_sources + job.related_sources
+                + [seen[duplicate_index].source, job.source]
+            ))
+            seen[duplicate_index] = preferred
         else:
             seen.append(job)
 

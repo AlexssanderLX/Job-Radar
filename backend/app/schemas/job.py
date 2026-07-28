@@ -22,6 +22,13 @@ class JobBase(BaseModel):
     match_summary: Optional[str] = None
     is_manual: bool = False
     external_id: Optional[str] = None
+    summary: Optional[str] = None
+    source_type: str = "connector"
+    result_type: str = "job"
+    query_origin: Optional[str] = None
+    raw_title: Optional[str] = None
+    raw_snippet: Optional[str] = None
+    related_sources: list[str] = []
 
     @field_validator("url", "apply_url", mode="before")
     @classmethod

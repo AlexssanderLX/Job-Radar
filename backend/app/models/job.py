@@ -25,6 +25,13 @@ class Job(SQLModel, table=True):
     match_summary: Optional[str] = None
     is_manual: bool = False
     external_id: Optional[str] = None
+    summary: Optional[str] = None
+    source_type: str = "connector"
+    result_type: str = "job"
+    query_origin: Optional[str] = None
+    raw_title: Optional[str] = None
+    raw_snippet: Optional[str] = None
+    related_sources: list[str] = Field(default=[], sa_column=Column(JSON))
 
     first_seen_at: datetime = Field(default_factory=datetime.utcnow)
     last_seen_at: datetime = Field(default_factory=datetime.utcnow)
