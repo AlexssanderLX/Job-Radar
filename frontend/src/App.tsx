@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Search from './pages/Search'
@@ -7,21 +7,19 @@ import { CatalogPage, HistoryPage, ProfilesPage, SourcesPage, StacksPage } from 
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/profiles" element={<ProfilesPage />} />
-          <Route path="/roles" element={<CatalogPage kind="roles" />} />
-          <Route path="/skills" element={<CatalogPage kind="skills" />} />
-          <Route path="/stacks" element={<StacksPage />} />
-          <Route path="/sources" element={<SourcesPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/profiles" element={<ProfilesPage />} />
+        <Route path="/roles" element={<CatalogPage kind="roles" />} />
+        <Route path="/skills" element={<CatalogPage kind="skills" />} />
+        <Route path="/stacks" element={<StacksPage />} />
+        <Route path="/sources" element={<SourcesPage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Layout>
   )
 }
