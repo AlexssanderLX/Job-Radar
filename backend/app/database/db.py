@@ -25,6 +25,9 @@ async def run_migrations() -> None:
         "ALTER TABLE jobs ADD COLUMN raw_title TEXT",
         "ALTER TABLE jobs ADD COLUMN raw_snippet TEXT",
         "ALTER TABLE jobs ADD COLUMN related_sources TEXT DEFAULT '[]'",
+        "ALTER TABLE jobs ADD COLUMN first_accessed_at TEXT",
+        "ALTER TABLE jobs ADD COLUMN last_accessed_at TEXT",
+        "ALTER TABLE jobs ADD COLUMN access_count INTEGER DEFAULT 0",
     ]
     async with engine.begin() as conn:
         for sql in migrations:

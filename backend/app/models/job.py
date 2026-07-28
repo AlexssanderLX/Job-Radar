@@ -44,6 +44,27 @@ class Job(SQLModel, table=True):
     status: str = Field(default="new")  # new, evaluating, favorite, applied, interview, rejected, archived
     applied_at: Optional[datetime] = None
     tags: list[str] = Field(default=[], sa_column=Column(JSON))
+    first_accessed_at: Optional[datetime] = None
+    last_accessed_at: Optional[datetime] = None
+    access_count: int = 0
+
+
+class LinkAccess(SQLModel, table=True):
+    __tablename__ = "link_accesses"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    normalized_url: str = Field(index=True, unique=True)
+    original_url: str
+    job_id: Optional[int] = Field(default=None, foreign_key="jobs.id", index=True)
+    search_id: Optional[int] = Field(default=None, foreign_key="search_history.id")
+    link_type: str = "job"
+    title: Optional[str] = None
+    company: Optional[str] = None
+    source: Optional[str] = None
+    origin: str = "job_radar"
+    first_accessed_at: datetime = Field(default_factory=datetime.utcnow)
+    last_accessed_at: datetime = Field(default_factory=datetime.utcnow)
+    access_count: int = 1
 
 
 class SearchHistory(SQLModel, table=True):

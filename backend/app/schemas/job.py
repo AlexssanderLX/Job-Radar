@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, computed_field, field_validator
 
 
 class JobBase(BaseModel):
@@ -55,6 +55,14 @@ class JobRead(JobBase):
     status: str = "new"
     applied_at: Optional[datetime] = None
     tags: list[str] = []
+    first_accessed_at: Optional[datetime] = None
+    last_accessed_at: Optional[datetime] = None
+    access_count: int = 0
+
+    @computed_field
+    @property
+    def has_been_accessed(self) -> bool:
+        return self.access_count > 0
 
     class Config:
         from_attributes = True

@@ -22,6 +22,7 @@ from app.api.stacks import router as stacks_router
 from app.api.search_profiles import router as profiles_router
 from app.api.sources import router as sources_router
 from app.api.dashboard import router as dashboard_router
+from app.api.link_accesses import router as link_accesses_router
 
 router = APIRouter()
 
@@ -32,6 +33,7 @@ router.include_router(stacks_router)
 router.include_router(profiles_router)
 router.include_router(sources_router)
 router.include_router(dashboard_router)
+router.include_router(link_accesses_router)
 
 
 @router.post("/search", response_model=SearchResult)
