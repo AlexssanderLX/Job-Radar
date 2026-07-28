@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {
   Search as SearchIcon, ExternalLink, Star, EyeOff, ChevronDown, ChevronUp,
-  X, RefreshCw,
+  X, RefreshCw, Eye,
 } from 'lucide-react'
 import { api } from '../services/api'
 import type { Job, SearchFilters, SearchResult, Role, Skill, Source } from '../types'
@@ -30,10 +30,11 @@ function formatDate(iso: string | null): string {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
 }
 
-function JobRow({ job, onFavorite, onHide }: {
+function JobRow({ job, onFavorite, onHide, onAccess }: {
   job: Job
   onFavorite: (id: number, current: boolean) => void
   onHide: (id: number) => void
+  onAccess: (job: Job) => void
 }) {
   return (
     <div className="flex flex-col gap-2 px-4 py-3 hover:bg-zinc-800/30 transition-colors border-b border-zinc-800 last:border-0">
@@ -48,6 +49,7 @@ function JobRow({ job, onFavorite, onHide }: {
             <span className="text-sm font-medium text-zinc-100 truncate">{job.title}</span>
             {job.level && <Badge variant="outline" className="text-xs">{job.level}</Badge>}
             {job.modality === 'remote' && <Badge variant="secondary" className="text-xs">Remoto</Badge>}
+            {job.has_been_accessed && <span className="inline-flex items-center gap-1 text-xs text-sky-400"><Eye size={11}/>Acessado</span>}
           </div>
           <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-400">
             <span className="font-medium">{job.company}</span>
@@ -98,6 +100,7 @@ function JobRow({ job, onFavorite, onHide }: {
             href={job.apply_url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => onAccess(job)}
             className="inline-flex items-center gap-1 h-7 px-2 rounded text-xs text-indigo-400 hover:text-indigo-300 border border-indigo-800/50 hover:bg-indigo-900/20 transition-colors"
           >
             <ExternalLink size={12} />
@@ -194,6 +197,17 @@ export default function SearchPage() {
       await api.updateJob(id, { is_hidden: true })
       setJobs((prev) => prev.filter((j) => j.id !== id))
     } catch { /* non-critical */ }
+  }, [])
+
+  const handleAccess = useCallback((job: Job) => {
+    const now = new Date().toISOString()
+    setJobs((prev) => prev.map((item) => item.id === job.id ? {
+      ...item, has_been_accessed: true, last_accessed_at: now,
+      first_accessed_at: item.first_accessed_at ?? now, access_count: item.access_count + 1,
+    } : item))
+    void api.accessJob(job.id).catch(() => {
+      setError('O link foi aberto, mas não foi possível registrar o acesso.')
+    })
   }, [])
 
   const autoJobs = jobs.filter((j) => !j.is_manual && j.match_score >= minScore)
@@ -429,7 +443,7 @@ export default function SearchPage() {
                     <span className="text-xs font-semibold text-zinc-300">Automático ({sortedAuto.length})</span>
                   </div>
                   {sortedAuto.map((job) => (
-                    <JobRow key={job.id} job={job} onFavorite={handleFavorite} onHide={handleHide} />
+                    <JobRow key={job.id} job={job} onFavorite={handleFavorite} onHide={handleHide} onAccess={handleAccess} />
                   ))}
                 </div>
               )}
@@ -444,14 +458,15 @@ export default function SearchPage() {
                     {manualJobs.map((job) => (
                       <div key={job.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-800/20">
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-zinc-300 truncate">{job.title}</p>
+                           <p className="flex items-center gap-2 text-xs font-medium text-zinc-300 truncate">{job.title}{job.has_been_accessed && <span className="inline-flex items-center gap-1 text-sky-400"><Eye size={10}/>Acessado</span>}</p>
                           <p className="text-xs text-zinc-600 truncate">{job.description}</p>
                         </div>
                         <div className="flex gap-1">
                           <a
                             href={job.url}
                             target="_blank"
-                            rel="noopener noreferrer"
+                             rel="noopener noreferrer"
+                             onClick={() => handleAccess(job)}
                             className="inline-flex items-center gap-1 h-6 px-2 rounded text-xs text-indigo-400 border border-indigo-800/50 hover:bg-indigo-900/20"
                           >
                             <ExternalLink size={10} /> Abrir

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ExternalLink, Star, EyeOff, Search, ChevronDown, ChevronUp } from 'lucide-react'
+import { ExternalLink, Star, Eye, EyeOff, Search, ChevronDown, ChevronUp } from 'lucide-react'
 import { api } from '../services/api'
 import type { Job } from '../types'
 import { Button } from '../components/ui/Button'
@@ -52,9 +52,10 @@ interface JobDetailDrawerProps {
   job: Job | null
   onClose: () => void
   onUpdate: (updated: Job) => void
+  onAccess: (job: Job) => void
 }
 
-function JobDetailDrawer({ job, onClose, onUpdate }: JobDetailDrawerProps) {
+function JobDetailDrawer({ job, onClose, onUpdate, onAccess }: JobDetailDrawerProps) {
   const [notes, setNotes] = useState(job?.notes ?? '')
   const [status, setStatus] = useState(job?.status ?? 'new')
   const [saving, setSaving] = useState(false)
@@ -166,6 +167,7 @@ function JobDetailDrawer({ job, onClose, onUpdate }: JobDetailDrawerProps) {
             href={job.apply_url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => onAccess(job)}
             className="inline-flex items-center gap-1.5 text-sm text-indigo-400 hover:text-indigo-300"
           >
             <ExternalLink size={14} /> Abrir vaga
@@ -222,6 +224,17 @@ export default function Jobs() {
       setJobs((prev) => prev.filter((j) => j.id !== id))
     } catch { /* ignore */ }
   }, [])
+
+  const handleAccess = useCallback((job: Job) => {
+    const now = new Date().toISOString()
+    const updated = {
+      ...job, has_been_accessed: true, last_accessed_at: now,
+      first_accessed_at: job.first_accessed_at ?? now, access_count: job.access_count + 1,
+    }
+    handleUpdate(updated)
+    setSelectedJob((current) => current?.id === job.id ? updated : current)
+    void api.accessJob(job.id).catch(() => setError('O link abriu, mas o acesso não pôde ser salvo.'))
+  }, [handleUpdate])
 
   const displayed = jobs.filter((j) => {
     if (j.is_hidden) return false
@@ -333,6 +346,7 @@ export default function Jobs() {
                       {STATUS_LABELS[job.status] ?? job.status}
                     </Badge>
                     {job.level && <Badge variant="outline" className="text-xs">{job.level}</Badge>}
+                    {job.has_been_accessed && <span className="inline-flex items-center gap-1 text-xs text-sky-400"><Eye size={11}/>Acessado</span>}
                   </div>
                   <p className="text-xs text-zinc-400">{job.company} · {SOURCE_LABELS[job.source] ?? job.source} · {formatDate(job.published_at)}</p>
                 </div>
@@ -359,6 +373,7 @@ export default function Jobs() {
                     rel="noopener noreferrer"
                     className="p-1.5 rounded hover:bg-zinc-700 text-zinc-500 hover:text-zinc-300 transition-colors"
                     onClick={(e) => e.stopPropagation()}
+                    onMouseDown={() => handleAccess(job)}
                   >
                     <ExternalLink size={13} />
                   </a>
@@ -373,6 +388,7 @@ export default function Jobs() {
         job={selectedJob}
         onClose={() => setSelectedJob(null)}
         onUpdate={handleUpdate}
+        onAccess={handleAccess}
       />
     </div>
   )

@@ -45,6 +45,38 @@ export interface Job {
   status: string
   applied_at: string | null
   tags: string[]
+  summary: string | null
+  source_type: string
+  result_type: string
+  query_origin: string | null
+  related_sources: string[]
+  has_been_accessed: boolean
+  first_accessed_at: string | null
+  last_accessed_at: string | null
+  access_count: number
+}
+
+export interface LinkAccess {
+  id: number
+  normalized_url: string
+  original_url: string
+  job_id: number | null
+  search_id: number | null
+  link_type: string
+  title: string | null
+  company: string | null
+  source: string | null
+  origin: string
+  first_accessed_at: string
+  last_accessed_at: string
+  access_count: number
+}
+
+export interface LinkAccessPage {
+  items: LinkAccess[]
+  total: number
+  page: number
+  page_size: number
 }
 
 export interface SearchResult {

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Search, Briefcase, BookMarked, Tag, Zap, Globe,
-  History, Layers3, ChevronLeft, ChevronRight, Radar,
+  History, Layers3, Link2, ChevronLeft, ChevronRight, Radar,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { path: '/stacks', label: 'Stacks', icon: Layers3 },
   { path: '/sources', label: 'Fontes', icon: Globe },
   { path: '/history', label: 'Histórico', icon: History },
+  { path: '/accessed-links', label: 'Links acessados', icon: Link2 },
 ]
 
 interface SidebarProps {

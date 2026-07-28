@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Search from './pages/Search'
 import Jobs from './pages/Jobs'
 import { CatalogPage, HistoryPage, ProfilesPage, SourcesPage, StacksPage } from './pages/Management'
+import AccessedLinks from './pages/AccessedLinks'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/stacks" element={<StacksPage />} />
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/accessed-links" element={<AccessedLinks />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

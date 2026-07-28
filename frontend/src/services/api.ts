@@ -10,6 +10,8 @@ import type {
   Source,
   Stack,
   DashboardData,
+  LinkAccess,
+  LinkAccessPage,
 } from '../types'
 
 const BASE = 'http://localhost:8000/api'
@@ -60,6 +62,23 @@ export const api = {
     data: Partial<Pick<Job, 'is_favorite' | 'is_hidden' | 'applied' | 'notes' | 'status' | 'applied_at' | 'tags'>>
   ) => request<Job>(`/jobs/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteJob: (id: number) => request<void>(`/jobs/${id}`, { method: 'DELETE' }),
+  accessJob: (id: number) =>
+    request<LinkAccess>(`/jobs/${id}/access`, { method: 'POST' }),
+  recordLinkAccess: (data: {
+    url: string; job_id?: number; search_id?: number; link_type?: string
+    title?: string; company?: string; source?: string; origin?: string
+  }) => request<LinkAccess>('/link-accesses', { method: 'POST', body: JSON.stringify(data) }),
+  getLinkAccesses: (params?: { search?: string; link_type?: string; source?: string; page?: number; page_size?: number }) => {
+    const qs = new URLSearchParams()
+    if (params?.search) qs.set('search', params.search)
+    if (params?.link_type) qs.set('link_type', params.link_type)
+    if (params?.source) qs.set('source', params.source)
+    if (params?.page) qs.set('page', String(params.page))
+    if (params?.page_size) qs.set('page_size', String(params.page_size))
+    return request<LinkAccessPage>(`/link-accesses?${qs}`)
+  },
+  deleteLinkAccess: (id: number) => request<void>(`/link-accesses/${id}`, { method: 'DELETE' }),
+  clearLinkAccesses: () => request<void>('/link-accesses', { method: 'DELETE' }),
 
   // Search history
   getSearchHistory: (limit = 50) =>
