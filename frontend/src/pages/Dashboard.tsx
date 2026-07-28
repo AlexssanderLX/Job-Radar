@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Briefcase, Star, EyeOff, SendHorizontal, Search,
+  Briefcase, Star, Eye, EyeOff, SendHorizontal, Search,
   BookMarked, Globe, TrendingUp, Plus, Clock,
 } from 'lucide-react'
 import { api } from '../services/api'
@@ -92,6 +92,8 @@ export default function Dashboard() {
         <StatCard icon={Search} label="Pesquisas" value={d.searches_count} color="bg-blue-900/50 text-blue-400" />
         <StatCard icon={BookMarked} label="Perfis ativos" value={d.profiles_count} color="bg-purple-900/50 text-purple-400" />
         <StatCard icon={Globe} label="Fontes ativas" value={d.sources_count} color="bg-orange-900/50 text-orange-400" />
+        <StatCard icon={Eye} label="Links acessados" value={d.accessed_links} color="bg-sky-900/50 text-sky-400" />
+        <StatCard icon={Briefcase} label="Vagas acessadas" value={d.accessed_jobs} color="bg-cyan-900/50 text-cyan-400" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -222,6 +224,9 @@ export default function Dashboard() {
         </Button>
         <Button variant="outline" size="sm" onClick={() => navigate('/jobs?is_favorite=true')}>
           <Star size={14} /> Ver favoritas
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => navigate('/accessed-links')}>
+          <Eye size={14} /> Links acessados
         </Button>
       </div>
     </div>

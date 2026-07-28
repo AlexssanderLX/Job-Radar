@@ -4,7 +4,7 @@ from sqlalchemy import func, text
 from sqlmodel import select, desc
 
 from app.database.db import get_session
-from app.models.job import Job, SearchHistory
+from app.models.job import Job, LinkAccess, SearchHistory
 from app.models.role import Role
 from app.models.search_profile import SearchProfile
 from app.models.source import Source
@@ -43,6 +43,13 @@ async def get_dashboard(db: AsyncSession = Depends(get_session)):
     # Source counts
     sources_result = await db.execute(select(func.count(Source.id)).where(Source.active == True))
     sources_count = sources_result.scalar() or 0
+
+    accessed_result = await db.execute(select(func.count(LinkAccess.id)))
+    accessed_links = accessed_result.scalar() or 0
+    accessed_jobs_result = await db.execute(
+        select(func.count(LinkAccess.id)).where(LinkAccess.link_type == "job")
+    )
+    accessed_jobs = accessed_jobs_result.scalar() or 0
 
     # Recent jobs (last 10, not hidden)
     recent_result = await db.execute(
@@ -93,6 +100,8 @@ async def get_dashboard(db: AsyncSession = Depends(get_session)):
         "searches_count": searches_count,
         "profiles_count": profiles_count,
         "sources_count": sources_count,
+        "accessed_links": accessed_links,
+        "accessed_jobs": accessed_jobs,
         "recent_jobs": recent_jobs,
         "top_jobs": top_jobs,
         "recent_searches": recent_searches,

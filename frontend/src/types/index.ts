@@ -197,6 +197,8 @@ export interface DashboardData {
   searches_count: number
   profiles_count: number
   sources_count: number
+  accessed_links: number
+  accessed_jobs: number
   recent_jobs: Job[]
   top_jobs: Job[]
   recent_searches: SearchHistory[]
