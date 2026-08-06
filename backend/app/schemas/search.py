@@ -15,6 +15,7 @@ class SearchFilters(BaseModel):
     location: Optional[str] = None
     # Location mode controls how location + remote filtering is applied:
     # "brasil"        - jobs in Brazil (or remote-labeled)
+    # "brasil_internacional" - jobs in Brazil plus international openings
     # "estado"        - jobs in a specific state (location field)
     # "cidade"        - jobs in a specific city (location field)
     # "remoto_brasil" - remote jobs (work from anywhere in Brazil)
@@ -67,7 +68,7 @@ class SearchFilters(BaseModel):
         elif mode == "remoto_global":
             self.remote = True
             self.accept_international = True
-        elif mode == "internacional":
+        elif mode in ("internacional", "brasil_internacional"):
             self.remote = False
             self.accept_international = True
         else:

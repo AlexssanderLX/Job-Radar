@@ -39,12 +39,13 @@ export const DAYS_OPTIONS = [
 
 export const LOCATION_MODE_OPTIONS = [
   { value: 'brasil', label: 'Brasil inteiro' },
+  { value: 'brasil_internacional', label: 'Brasil + exterior' },
   { value: 'estado', label: 'Por estado' },
   { value: 'cidade', label: 'Por cidade' },
   { value: 'remoto_brasil', label: 'Remoto no Brasil' },
   { value: 'remoto_latam', label: 'Remoto América Latina' },
   { value: 'remoto_global', label: 'Remoto global' },
-  { value: 'internacional', label: 'Aceitar vagas internacionais' },
+  { value: 'internacional', label: 'Somente busca internacional ampla' },
 ]
 
 export const SOURCE_LABELS: Record<string, string> = {

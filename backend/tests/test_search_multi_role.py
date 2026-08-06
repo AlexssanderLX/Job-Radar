@@ -74,6 +74,11 @@ class TestSearchFiltersMultiRole:
         f = SearchFilters(roles=["DevOps"], location_mode="brasil")
         assert f.location == "Brasil"
 
+    def test_brazil_plus_international_accepts_foreign_jobs(self):
+        f = SearchFilters(roles=["Backend"], location_mode="brasil_internacional")
+        assert f.remote is False
+        assert f.accept_international is True
+
     def test_remote_latam_sets_remote(self):
         f = SearchFilters(roles=["DevOps"], location_mode="remoto_latam")
         assert f.remote is True

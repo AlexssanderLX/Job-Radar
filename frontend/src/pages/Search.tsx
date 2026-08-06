@@ -174,7 +174,7 @@ export default function SearchPage() {
     setFilters((current) => ({
       ...current,
       location_mode: mode,
-      location: mode === 'brasil' ? 'Brasil' : ['estado', 'cidade'].includes(mode) ? null : current.location,
+      location: ['brasil', 'brasil_internacional'].includes(mode) ? 'Brasil' : ['estado', 'cidade'].includes(mode) ? null : current.location,
     }))
   }
 

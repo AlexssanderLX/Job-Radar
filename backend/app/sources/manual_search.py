@@ -23,7 +23,7 @@ def _build_linkedin_url(role_terms: list[str], filters: SearchFilters) -> str:
         params["f_WT"] = "2"  # remote
     if filters.days_ago:
         params["f_TPR"] = DAYS_MAP.get(filters.days_ago, "")
-    if filters.location:
+    if filters.location and filters.location_mode not in ("internacional", "brasil_internacional"):
         params["location"] = filters.location
 
     return "https://www.linkedin.com/jobs/search/?" + urllib.parse.urlencode(
@@ -41,7 +41,7 @@ def _build_google_linkedin_url(role_terms: list[str], level_terms: list[str], fi
         query += f' ({level_part})'
     if tech_part:
         query += f' ({tech_part})'
-    if filters.location:
+    if filters.location and filters.location_mode not in ("internacional", "brasil_internacional"):
         query += f' {filters.location}'
 
     return "https://www.google.com/search?q=" + urllib.parse.quote(query)

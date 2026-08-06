@@ -87,7 +87,7 @@ def build_web_queries(filters: SearchFilters) -> list[str]:
         levels.extend(expand_levels(level))
     level_part = " OR ".join(f'"{term}"' for term in list(dict.fromkeys(levels))[:4])
     suffix = f" ({level_part})" if level_part else ""
-    if filters.location:
+    if filters.location and filters.location_mode not in ("internacional", "brasil_internacional"):
         suffix += f' "{filters.location}"'
     return [
         f"site:linkedin.com/jobs/view ({role_part}){suffix}",
