@@ -198,7 +198,7 @@ export default function Jobs() {
   const fetchJobs = useCallback(async () => {
     setLoading(true)
     try {
-      const data = await api.getJobs({ is_hidden: false })
+      const data = await api.getJobs({ is_hidden: false, limit: 500 })
       setJobs(data)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
@@ -341,7 +341,9 @@ export default function Jobs() {
       {!loading && displayed.length > 0 && (
         <div className="rounded-lg border border-zinc-800 overflow-hidden">
           <p className="px-4 py-2 text-xs text-zinc-500 border-b border-zinc-800 bg-zinc-900/30">
-            {displayed.length} vaga(s)
+            {displayed.length === jobs.length
+              ? `${jobs.length} vaga(s) salva(s)`
+              : `${displayed.length} de ${jobs.length} vaga(s) salva(s)`}
           </p>
           <div>
             {displayed.map((job) => (
