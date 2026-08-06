@@ -45,3 +45,19 @@ def test_skills_do_not_become_mandatory_without_minimum():
     filters = SearchFilters(roles=["Backend Python"], technologies=["Kubernetes"], min_skill_matches=0)
     rejected, _ = mandatory_reject(job(), filters)
     assert not rejected
+
+
+def test_minimum_uses_skills_detected_from_full_source_content():
+    candidate = job(
+        description="Resumo curto sem a lista técnica",
+        technologies=["Python", "Docker", "Kubernetes"],
+    )
+    filters = SearchFilters(
+        roles=["Backend Python"],
+        technologies=["Python", "Docker", "AWS"],
+        min_skill_matches=2,
+    )
+
+    rejected, reason = mandatory_reject(candidate, filters)
+
+    assert not rejected, reason

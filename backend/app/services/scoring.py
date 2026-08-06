@@ -92,7 +92,11 @@ def mandatory_reject(job: "JobCreate", filters: "SearchFilters") -> tuple[bool, 
 
     # Skills remain preferences unless the user explicitly requires a minimum.
     if filters.min_skill_matches > 0 and filters.technologies:
-        matches = [skill for skill in filters.technologies if skill.lower() in searchable]
+        detected_skills = {skill.lower() for skill in job.technologies}
+        matches = [
+            skill for skill in filters.technologies
+            if skill.lower() in searchable or skill.lower() in detected_skills
+        ]
         required_count = min(filters.min_skill_matches, len(filters.technologies))
         if len(matches) < required_count:
             return True, f"Somente {len(matches)} de {required_count} habilidade(s) mínima(s) encontrada(s)"

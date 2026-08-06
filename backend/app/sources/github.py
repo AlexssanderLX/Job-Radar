@@ -139,17 +139,21 @@ class GitHubSource(BaseSource):
 
                     # label detection
                     labels = [la.get("name", "") for la in (issue.get("labels") or [])]
-                    level = None
-                    for la in labels:
-                        la_lower = la.lower()
-                        if any(w in la_lower for w in ["estágio", "estagio", "intern"]):
-                            level = "Estágio"
-                        elif any(w in la_lower for w in ["júnior", "junior", "jr"]):
-                            level = "Júnior"
-                        elif any(w in la_lower for w in ["pleno", "mid"]):
-                            level = "Pleno"
+                    # The title describes the actual opening more reliably than
+                    # repository labels, which can be broad or stale.
+                    level = detect_level(title)
                     if level is None:
-                        level = detect_level(title)
+                        for la in labels:
+                            la_lower = la.lower()
+                            if any(w in la_lower for w in ["estágio", "estagio", "intern"]):
+                                level = "Estágio"
+                                break
+                            if any(w in la_lower for w in ["júnior", "junior", "jr"]):
+                                level = "Júnior"
+                                break
+                            if any(w in la_lower for w in ["pleno", "mid"]):
+                                level = "Pleno"
+                                break
 
                     results.append(
                         JobCreate(

@@ -496,7 +496,7 @@ export default function SearchPage() {
               {manualJobs.length > 0 && (
                 <div className="rounded-lg border border-zinc-800 overflow-hidden">
                   <div className="px-4 py-2 bg-zinc-800/50 border-b border-zinc-800">
-                    <div><span className="text-xs font-semibold text-zinc-300">Pesquisas externas ({manualJobs.length})</span><p className="mt-0.5 text-xs text-zinc-600">Use para ampliar os resultados quando uma fonte não puder ser consultada automaticamente.</p></div>
+                    <div><span className="text-xs font-semibold text-zinc-300">Links de busca externa ({manualJobs.length})</span><p className="mt-0.5 text-xs text-zinc-600">Estes itens são atalhos de pesquisa, não vagas encontradas. Eles aparecem quando nenhuma vaga automática passa pelos filtros.</p></div>
                   </div>
                   <div className="divide-y divide-zinc-800/50">
                     {manualJobs.map((job) => (
