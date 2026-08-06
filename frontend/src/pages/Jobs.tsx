@@ -269,7 +269,7 @@ export default function Jobs() {
   })
 
   return (
-    <div className="space-y-4 max-w-4xl">
+    <div className="space-y-5 w-full max-w-6xl">
       <PageHeader
         title="Vagas"
         description={`${jobs.length} vagas salvas`}
@@ -284,26 +284,26 @@ export default function Jobs() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar título, empresa..."
-            className="h-8 pl-8 pr-3 rounded-md border border-zinc-700 bg-zinc-900 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+            className="h-10 pl-9 pr-3 rounded-md border border-zinc-700 bg-zinc-900 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="h-8 rounded-md border border-zinc-700 bg-zinc-900 px-2 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="h-10 rounded-md border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
         <button
           onClick={() => setShowFavorites((v) => !v)}
-          className={`h-8 px-3 rounded-md text-xs border transition-colors ${showFavorites ? 'bg-yellow-900/30 border-yellow-700 text-yellow-400' : 'border-zinc-700 text-zinc-400 hover:bg-zinc-800'}`}
+          className={`h-10 px-4 rounded-md text-sm border transition-colors ${showFavorites ? 'bg-yellow-900/30 border-yellow-700 text-yellow-400' : 'border-zinc-700 text-zinc-400 hover:bg-zinc-800'}`}
         >
           <Star size={12} className="inline mr-1" />
           Favoritas
         </button>
         <button
           onClick={() => setShowFilters((v) => !v)}
-          className="h-8 px-3 rounded-md text-xs border border-zinc-700 text-zinc-400 hover:bg-zinc-800"
+          className="h-10 px-4 rounded-md text-sm border border-zinc-700 text-zinc-400 hover:bg-zinc-800"
         >
           {showFilters ? <ChevronUp size={12} className="inline mr-1" /> : <ChevronDown size={12} className="inline mr-1" />}
           Mais filtros
@@ -347,7 +347,7 @@ export default function Jobs() {
             {displayed.map((job) => (
               <div
                 key={job.id}
-                className="flex items-start gap-3 px-4 py-3 hover:bg-zinc-800/30 cursor-pointer border-b border-zinc-800 last:border-0 transition-colors"
+                className="flex items-start gap-4 px-5 py-4 hover:bg-zinc-800/30 cursor-pointer border-b border-zinc-800 last:border-0 transition-colors"
                 onClick={() => setSelectedJob(job)}
               >
                 {!job.is_manual && (
@@ -357,14 +357,14 @@ export default function Jobs() {
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-medium text-zinc-100">{job.title}</span>
+                    <span className="text-base font-semibold text-zinc-100">{job.title}</span>
                     <Badge variant={STATUS_BADGE[job.status] ?? 'secondary'} className="text-xs">
                       {STATUS_LABELS[job.status] ?? job.status}
                     </Badge>
                     {job.level && <Badge variant="outline" className="text-xs">{job.level}</Badge>}
                     {job.has_been_accessed && <span className="inline-flex items-center gap-1 text-xs text-sky-400"><Eye size={11}/>Acessado</span>}
                   </div>
-                  <p className="text-xs text-zinc-400">{job.company} · {SOURCE_LABELS[job.source] ?? job.source} · {formatDate(job.published_at)}</p>
+                  <p className="mt-1 text-sm text-zinc-400">{job.company} · {SOURCE_LABELS[job.source] ?? job.source} · {formatDate(job.published_at)}</p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                   {!job.is_manual && (

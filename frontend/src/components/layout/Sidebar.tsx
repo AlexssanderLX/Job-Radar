@@ -31,15 +31,15 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
     <div
       className={[
         'flex flex-col h-full bg-zinc-950 border-r border-zinc-800 transition-all duration-200',
-        collapsed ? 'w-16' : 'w-60',
+        collapsed ? 'w-20' : 'w-64',
       ].join(' ')}
     >
       {/* Logo */}
-      <div className={['flex items-center h-14 border-b border-zinc-800 shrink-0', collapsed ? 'justify-center px-2' : 'px-4 gap-3'].join(' ')}>
-        <Radar size={20} className="text-indigo-400 shrink-0" />
+      <div className={['flex items-center h-16 border-b border-zinc-800 shrink-0', collapsed ? 'justify-center px-2' : 'px-5 gap-3'].join(' ')}>
+        <Radar size={24} className="text-indigo-400 shrink-0" />
         {!collapsed && (
           <div className="flex items-center gap-2 min-w-0">
-            <span className="font-bold text-zinc-100 text-sm tracking-tight truncate">Job Radar</span>
+            <span className="font-bold text-zinc-100 text-base tracking-tight truncate">Job Radar</span>
             <span className="text-xs px-1.5 py-0.5 bg-green-900/60 text-green-400 rounded text-[10px] border border-green-800/50">local</span>
           </div>
         )}
@@ -59,13 +59,13 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               title={collapsed ? label : undefined}
               className={[
                 'flex items-center rounded-md text-sm font-medium transition-colors group relative',
-                collapsed ? 'h-10 w-10 justify-center mx-auto' : 'h-9 px-2.5 gap-2.5',
+                collapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-11 px-3 gap-3',
                 isActive
                   ? 'bg-indigo-600/20 text-indigo-400'
                   : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100',
               ].join(' ')}
             >
-              <Icon size={16} className="shrink-0" />
+              <Icon size={19} className="shrink-0" />
               {!collapsed && <span>{label}</span>}
               {collapsed && (
                 <span className="absolute left-full ml-2 px-2 py-1 bg-zinc-800 text-zinc-100 text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none z-50 border border-zinc-700 shadow-lg">
