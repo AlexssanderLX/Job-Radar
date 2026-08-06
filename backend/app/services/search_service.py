@@ -21,6 +21,7 @@ from app.sources.manual_search import ManualSearchSource
 from app.sources.web_search import IndexedWebSearchSource
 from app.sources.configured import ConfiguredManualSource
 from app.sources.remotive import RemotiveSource
+from app.sources.remoteok import RemoteOkSource
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ ALL_SOURCES = [
     GupySource(),
     GitHubSource(),
     RemotiveSource(),
+    RemoteOkSource(),
     IndexedWebSearchSource(),
     ManualSearchSource(),
 ]

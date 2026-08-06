@@ -67,6 +67,27 @@ ROLE_EXPANSIONS: dict[str, list[str]] = {
     ],
 }
 
+ROLE_KEYWORDS: dict[str, list[str]] = {
+    "backend": ["backend", "back-end", "server-side", "software developer", "software engineer"],
+    "backend .net": [".net", "c#", "backend", "back-end", "software developer", "software engineer"],
+    "desenvolvedor backend": ["backend", "back-end", "server-side", "software developer", "software engineer"],
+    "desenvolvedor full stack": ["full stack", "full-stack", "fullstack"],
+    "full stack": ["full stack", "full-stack", "fullstack"],
+}
+
+
+def matches_role_text(text: str, roles: list[str]) -> bool:
+    """Match job text using expansions plus safe role-family keywords."""
+    lowered = text.lower()
+    variants = expand_roles_multi(roles) or roles
+    if any(variant.lower() in lowered for variant in variants):
+        return True
+    return any(
+        keyword in lowered
+        for role in roles
+        for keyword in ROLE_KEYWORDS.get(role.strip().lower(), [])
+    )
+
 LEVEL_EXPANSIONS: dict[str, list[str]] = {
     "estágio": [
         "Estágio", "Estagiário", "Estagiária", "Intern", "Internship",

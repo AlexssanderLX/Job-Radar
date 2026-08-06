@@ -212,6 +212,14 @@ DEFAULT_SOURCES = [
         "description": "Vagas remotas reais pela API pública da Remotive",
     },
     {
+        "name": "remoteok",
+        "display_name": "Remote OK",
+        "source_type": "connector",
+        "is_manual": False,
+        "priority": 5,
+        "description": "Vagas remotas reais pelo feed público da Remote OK",
+    },
+    {
         "name": "manual_search",
         "display_name": "Pesquisa Manual",
         "source_type": "manual",
