@@ -55,6 +55,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   github: 'GitHub',
   remotive: 'Remotive',
   remoteok: 'Remote OK',
+  linkedin_jobs: 'LinkedIn',
   manual_search: 'Pesquisa manual',
 }
 

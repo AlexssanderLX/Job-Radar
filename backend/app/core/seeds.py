@@ -220,6 +220,14 @@ DEFAULT_SOURCES = [
         "description": "Vagas remotas reais pelo feed público da Remote OK",
     },
     {
+        "name": "linkedin_jobs",
+        "display_name": "LinkedIn Jobs",
+        "source_type": "connector",
+        "is_manual": False,
+        "priority": 1,
+        "description": "Vagas reais coletadas automaticamente da busca pública do LinkedIn",
+    },
+    {
         "name": "manual_search",
         "display_name": "Pesquisa Manual",
         "source_type": "manual",
@@ -280,5 +288,18 @@ async def seed_data(db: AsyncSession) -> None:
                 updated_at=now,
             )
             db.add(source)
+
+    # Upgrade an older user-created LinkedIn link into the built-in automatic
+    # connector while preserving its database identity and access history.
+    linkedin_result = await db.execute(select(Source).where(Source.name == "linkedin_jobs"))
+    linkedin_source = linkedin_result.scalars().first()
+    if linkedin_source:
+        linkedin_source.display_name = "LinkedIn Jobs"
+        linkedin_source.source_type = "connector"
+        linkedin_source.is_manual = False
+        linkedin_source.active = True
+        linkedin_source.description = "Vagas reais coletadas automaticamente da busca pública do LinkedIn"
+        linkedin_source.updated_at = now
+        db.add(linkedin_source)
 
     await db.commit()

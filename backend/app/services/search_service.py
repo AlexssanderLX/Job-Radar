@@ -22,6 +22,7 @@ from app.sources.web_search import IndexedWebSearchSource
 from app.sources.configured import ConfiguredManualSource
 from app.sources.remotive import RemotiveSource
 from app.sources.remoteok import RemoteOkSource
+from app.sources.linkedin import LinkedInSource
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ ALL_SOURCES = [
     GitHubSource(),
     RemotiveSource(),
     RemoteOkSource(),
+    LinkedInSource(),
     IndexedWebSearchSource(),
     ManualSearchSource(),
 ]
