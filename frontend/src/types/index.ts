@@ -186,6 +186,8 @@ export interface Source {
   last_error: string | null
   created_at: string
   updated_at: string
+  domain: string | null
+  search_url_template: string | null
 }
 
 export interface DashboardData {

@@ -3,7 +3,8 @@ import { Layout } from './components/layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Search from './pages/Search'
 import Jobs from './pages/Jobs'
-import { CatalogPage, HistoryPage, ProfilesPage, SourcesPage, StacksPage } from './pages/Management'
+import { CatalogPage, HistoryPage, ProfilesPage, StacksPage } from './pages/Management'
+import SourcesPage from './pages/Sources'
 import AccessedLinks from './pages/AccessedLinks'
 
 export default function App() {
