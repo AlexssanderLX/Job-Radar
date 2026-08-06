@@ -11,6 +11,7 @@ class SearchFilters(BaseModel):
 
     levels: list[str] = []
     technologies: list[str] = []
+    min_skill_matches: int = 0
     location: Optional[str] = None
     # Location mode controls how location + remote filtering is applied:
     # "brasil"        - jobs in Brazil (or remote-labeled)
@@ -35,6 +36,11 @@ class SearchFilters(BaseModel):
     @classmethod
     def cap_results(cls, v: int) -> int:
         return min(v, 500)
+
+    @field_validator("min_skill_matches")
+    @classmethod
+    def valid_min_skill_matches(cls, v: int) -> int:
+        return max(0, min(v, 50))
 
     @field_validator("location")
     @classmethod

@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import httpx
 
 from app.core.config import settings
-from app.core.expansions import expand_roles_multi, expand_levels
+from app.core.expansions import detect_level, expand_roles_multi, expand_levels
 from app.schemas.job import JobCreate
 from app.schemas.search import SearchFilters
 from app.sources.base import BaseSource
@@ -148,6 +148,8 @@ class GitHubSource(BaseSource):
                             level = "Júnior"
                         elif any(w in la_lower for w in ["pleno", "mid"]):
                             level = "Pleno"
+                    if level is None:
+                        level = detect_level(title)
 
                     results.append(
                         JobCreate(

@@ -297,6 +297,12 @@ export default function SearchPage() {
                 onChange={(v) => setFilter('technologies', v)}
                 placeholder="Selecionar habilidades..."
               />
+              {filters.technologies.length > 0 && <label className="flex flex-col gap-1 text-xs font-medium text-zinc-400">Mínimo de habilidades
+                <select value={filters.min_skill_matches} onChange={(e) => setFilter('min_skill_matches', Number(e.target.value))} className="h-9 rounded-md border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-100">
+                  <option value={0}>Sem mínimo</option>
+                  {filters.technologies.map((_, index) => <option key={index + 1} value={index + 1}>Pelo menos {index + 1}</option>)}
+                </select>
+              </label>}
             </div>
 
             {/* Section 3: Refinamento */}

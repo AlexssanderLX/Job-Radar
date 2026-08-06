@@ -86,7 +86,27 @@ LEVEL_EXPANSIONS: dict[str, list[str]] = {
         "Nível II", "Nível 2", "Analista II", "Desenvolvedor II",
         "Analista Pleno", "Desenvolvedor Pleno",
     ],
+    "sênior": ["Sênior", "Senior", "Sr", "Sr.", "Senior-Level", "Nível III", "Analista III"],
+    "especialista": ["Especialista", "Specialist", "Expert"],
+    "lead": ["Lead", "Tech Lead", "Team Lead", "Lead Engineer", "Lead Developer"],
+    "staff": ["Staff", "Staff Engineer", "Senior Staff"],
+    "principal": ["Principal", "Principal Engineer", "Principal Developer"],
+    "manager": ["Manager", "Engineering Manager", "Gerente", "Gestor"],
 }
+
+
+def detect_level(text: str) -> str | None:
+    padded = f" {text.lower()} "
+    ordered = ["manager", "principal", "staff", "lead", "especialista", "sênior", "pleno", "júnior", "trainee", "estágio"]
+    canonical = {
+        "manager": "Manager", "principal": "Principal", "staff": "Staff", "lead": "Lead",
+        "especialista": "Especialista", "sênior": "Sênior", "pleno": "Pleno",
+        "júnior": "Júnior", "trainee": "Trainee", "estágio": "Estágio",
+    }
+    for level in ordered:
+        if any(variant.lower() in padded for variant in LEVEL_EXPANSIONS[level]):
+            return canonical[level]
+    return None
 
 # Words that, when found in a job TITLE (with word-boundary context), indicate a senior position.
 # Used to auto-exclude jobs when only júnior/pleno/estágio/trainee levels are selected.

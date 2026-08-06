@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 import httpx
 
 from app.core.config import settings
-from app.core.expansions import expand_roles_multi, expand_levels
+from app.core.expansions import detect_level, expand_roles_multi, expand_levels
 from app.schemas.job import JobCreate
 from app.schemas.search import SearchFilters
 from app.sources.base import BaseSource
@@ -175,7 +175,7 @@ class GupySource(BaseSource):
                     company=company_name or "Empresa no Gupy",
                     location=location_str or None,
                     modality=modality,
-                    level=None,
+                    level=detect_level(title),
                     description=j.get("description", "")[:400] or None,
                     technologies=techs,
                     source=self.name,

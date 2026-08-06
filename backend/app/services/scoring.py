@@ -90,6 +90,13 @@ def mandatory_reject(job: "JobCreate", filters: "SearchFilters") -> tuple[bool, 
         if missing:
             return True, f"Palavras obrigatórias ausentes: {', '.join(missing)}"
 
+    # Skills remain preferences unless the user explicitly requires a minimum.
+    if filters.min_skill_matches > 0 and filters.technologies:
+        matches = [skill for skill in filters.technologies if skill.lower() in searchable]
+        required_count = min(filters.min_skill_matches, len(filters.technologies))
+        if len(matches) < required_count:
+            return True, f"Somente {len(matches)} de {required_count} habilidade(s) mínima(s) encontrada(s)"
+
     # 3. Senior title auto-exclusion: when only non-senior levels are selected,
     #    reject any job whose TITLE indicates a senior position.
     #    Note: we only look at title, not description — a mention of "Tech Lead" in

@@ -14,7 +14,7 @@ export const ROLE_OPTIONS = [
   'Desenvolvedor Full Stack',
 ]
 
-export const LEVEL_OPTIONS = ['Estágio', 'Trainee', 'Júnior', 'Pleno']
+export const LEVEL_OPTIONS = ['Estágio', 'Trainee', 'Júnior', 'Pleno', 'Sênior', 'Especialista', 'Lead', 'Staff', 'Principal', 'Manager']
 
 export const TECH_OPTIONS = [
   'Python', 'C#', '.NET', 'Docker', 'Linux', 'GitHub Actions', 'GitLab CI',
@@ -60,12 +60,13 @@ export const DEFAULT_FILTERS = {
   role: null as string | null,
   levels: ['Júnior', 'Pleno'] as string[],
   technologies: [] as string[],
+  min_skill_matches: 0,
   location: 'Brasil',
   location_mode: 'brasil',
   remote: false,
   days_ago: 7 as number | null,
   required_words: [] as string[],
-  excluded_words: [...DEFAULT_EXCLUDE_WORDS],
+  excluded_words: [] as string[],
   include_unlevel: false,
   accept_international: false,
   sources: [] as string[],

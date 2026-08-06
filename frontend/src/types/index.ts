@@ -3,6 +3,7 @@ export interface SearchFilters {
   role?: string | null
   levels: string[]
   technologies: string[]
+  min_skill_matches: number
   location: string | null
   location_mode: string
   remote: boolean

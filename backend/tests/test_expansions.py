@@ -29,6 +29,7 @@ def test_unknown_role_returns_original():
     assert result == ["custom role xyz"]
 
 
-def test_unknown_level_returns_original():
+def test_specialist_level_expansion():
     result = expand_levels("especialista")
-    assert result == ["especialista"]
+    assert "Specialist" in result
+    assert "Expert" in result
