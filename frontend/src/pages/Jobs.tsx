@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ExternalLink, Star, Eye, EyeOff, Search, ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
+import { ExternalLink, Star, Eye, EyeOff, Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react'
 import { api } from '../services/api'
 import type { Job } from '../types'
 import { Button } from '../components/ui/Button'
@@ -21,6 +21,8 @@ const STATUS_OPTIONS = [
   { value: 'rejected', label: 'Rejeitado' },
   { value: 'archived', label: 'Arquivado' },
 ]
+
+const PAGE_SIZE = 50
 
 const STATUS_BADGE: Record<string, 'default' | 'secondary' | 'success' | 'warning' | 'destructive' | 'outline'> = {
   new: 'secondary',
@@ -194,6 +196,7 @@ export default function Jobs() {
   const [showFavorites, setShowFavorites] = useState(false)
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [showFilters, setShowFilters] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const fetchJobs = useCallback(async () => {
     setLoading(true)
@@ -267,6 +270,11 @@ export default function Jobs() {
     }
     return true
   })
+  const pageCount = Math.max(1, Math.ceil(displayed.length / PAGE_SIZE))
+  const pageJobs = displayed.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  useEffect(() => { setCurrentPage(1) }, [search, statusFilter, minScore, showFavorites])
+  useEffect(() => { setCurrentPage((page) => Math.min(page, pageCount)) }, [pageCount])
 
   return (
     <div className="space-y-5 w-full max-w-6xl">
@@ -341,12 +349,11 @@ export default function Jobs() {
       {!loading && displayed.length > 0 && (
         <div className="rounded-lg border border-zinc-800 overflow-hidden">
           <p className="px-4 py-2 text-xs text-zinc-500 border-b border-zinc-800 bg-zinc-900/30">
-            {displayed.length === jobs.length
-              ? `${jobs.length} vaga(s) salva(s)`
-              : `${displayed.length} de ${jobs.length} vaga(s) salva(s)`}
+            Mostrando {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, displayed.length)} de {displayed.length} vaga(s)
+            {displayed.length !== jobs.length && ` · ${jobs.length} salva(s) no total`}
           </p>
           <div>
-            {displayed.map((job) => (
+            {pageJobs.map((job) => (
               <div
                 key={job.id}
                 className="flex items-start gap-4 px-5 py-4 hover:bg-zinc-800/30 cursor-pointer border-b border-zinc-800 last:border-0 transition-colors"
@@ -400,6 +407,28 @@ export default function Jobs() {
               </div>
             ))}
           </div>
+          {pageCount > 1 && (
+            <nav aria-label="Paginação de vagas" className="flex flex-wrap items-center justify-center gap-2 border-t border-zinc-800 bg-zinc-900/30 px-4 py-4">
+              <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((page) => page - 1)}>
+                <ChevronLeft size={15}/>Anterior
+              </Button>
+              {Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  aria-label={`Ir para página ${page}`}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                  onClick={() => setCurrentPage(page)}
+                  className={`h-8 min-w-8 rounded-md border px-2 text-sm font-medium transition-colors ${currentPage === page ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100'}`}
+                >
+                  {page}
+                </button>
+              ))}
+              <Button variant="outline" size="sm" disabled={currentPage === pageCount} onClick={() => setCurrentPage((page) => page + 1)}>
+                Próxima<ChevronRight size={15}/>
+              </Button>
+            </nav>
+          )}
         </div>
       )}
 
