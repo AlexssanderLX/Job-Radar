@@ -67,7 +67,7 @@ export const DEFAULT_FILTERS = {
   days_ago: 7 as number | null,
   required_words: [] as string[],
   excluded_words: [] as string[],
-  include_unlevel: false,
+  include_unlevel: true,
   accept_international: false,
   sources: [] as string[],
   max_results: 100,

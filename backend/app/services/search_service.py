@@ -35,6 +35,13 @@ ALL_SOURCES = [
 SOURCE_MAP = {s.name: s for s in ALL_SOURCES}
 
 
+def keep_manual_fallbacks(jobs: list[JobCreate]) -> list[JobCreate]:
+    """Only expose external search links when no automatic vacancy survived."""
+    if any(not job.is_manual for job in jobs):
+        return [job for job in jobs if not job.is_manual]
+    return jobs
+
+
 async def run_search(filters: SearchFilters, db: AsyncSession) -> SearchResult:
     start = time.monotonic()
 
@@ -105,6 +112,10 @@ async def run_search(filters: SearchFilters, db: AsyncSession) -> SearchResult:
             logger.debug("Rejected '%s': %s", job.title[:60], reason)
         else:
             filtered.append(job)
+
+    # Manual/external searches are fallbacks. If real vacancies survived the
+    # filters, omit generic search links and keep the result focused on jobs.
+    filtered = keep_manual_fallbacks(filtered)
 
     logger.info(
         "Filter step: %d deduplicated → %d after mandatory filters",

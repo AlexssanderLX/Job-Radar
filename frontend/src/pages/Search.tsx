@@ -170,6 +170,14 @@ export default function SearchPage() {
     setFilters((f) => ({ ...f, [key]: value }))
   }
 
+  const setLocationMode = (mode: string) => {
+    setFilters((current) => ({
+      ...current,
+      location_mode: mode,
+      location: mode === 'brasil' ? 'Brasil' : ['estado', 'cidade'].includes(mode) ? null : current.location,
+    }))
+  }
+
   const handleSearch = useCallback(async () => {
     if (filters.roles.length === 0) {
       setError('Selecione ao menos um cargo')
@@ -267,7 +275,7 @@ export default function SearchPage() {
               <Select
                 label="Localização"
                 value={filters.location_mode}
-                onChange={(e) => setFilter('location_mode', e.target.value)}
+                onChange={(e) => setLocationMode(e.target.value)}
                 options={LOCATION_MODE_OPTIONS}
               />
               {needsLocation && (
@@ -426,7 +434,7 @@ export default function SearchPage() {
             <>
               <div className="flex items-center justify-between">
                 <p className="text-xs text-zinc-400">
-                  {autoJobs.length} automáticas · {manualJobs.length} externas · {result.duration_seconds.toFixed(1)}s
+                  {autoJobs.length} vagas encontradas{manualJobs.length > 0 ? ` · ${manualJobs.length} pesquisas externas de apoio` : ''} · {result.duration_seconds.toFixed(1)}s
                   {result.sources_failed.length > 0 && (
                     <span className="text-yellow-500 ml-2">· {result.sources_failed.length} fonte(s) falharam</span>
                   )}

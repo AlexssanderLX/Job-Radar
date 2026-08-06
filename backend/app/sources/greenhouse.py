@@ -183,7 +183,7 @@ class GreenhouseSource(BaseSource):
                 # Most US/EU companies support remote but don't label every posting.
                 # Scoring already rewards remote-labeled jobs.
                 pass
-            elif filters.location:
+            elif filters.location_mode in ("estado", "cidade") and filters.location:
                 # User wants a specific location (not remote-only).
                 # Show jobs in that location OR globally-remote jobs.
                 loc_lower = (location or "").lower()

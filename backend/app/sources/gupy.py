@@ -95,7 +95,7 @@ class GupySource(BaseSource):
     ) -> list[JobCreate]:
         params: dict = {"name": term, "limit": 40, "offset": 0}
 
-        if filters.location and filters.location.lower() not in ("brasil", "brazil", "remoto", "remote"):
+        if filters.location_mode in ("estado", "cidade") and filters.location:
             params["city"] = filters.location
 
         try:
@@ -136,7 +136,7 @@ class GupySource(BaseSource):
             if filters.remote and modality != "remote":
                 continue
 
-            if filters.location and not filters.remote:
+            if filters.location_mode in ("estado", "cidade") and filters.location and not filters.remote:
                 city = (j.get("city") or "").lower()
                 state = (j.get("state") or "").lower()
                 country = (j.get("country") or "").lower()

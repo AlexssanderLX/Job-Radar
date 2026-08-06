@@ -24,7 +24,7 @@ class SearchFilters(BaseModel):
     location_mode: str = "brasil"
     remote: bool = False           # synced from location_mode by validator
     accept_international: bool = False  # synced from location_mode by validator
-    include_unlevel: bool = False  # include jobs with no detected level when level filter is active
+    include_unlevel: bool = True  # include jobs whose source does not expose a level
     days_ago: Optional[int] = None
     required_words: list[str] = []
     excluded_words: list[str] = []
