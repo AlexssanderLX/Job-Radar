@@ -204,6 +204,14 @@ DEFAULT_SOURCES = [
         "description": "Links de busca Google para vagas em empresas que usam Lever",
     },
     {
+        "name": "remotive",
+        "display_name": "Remotive",
+        "source_type": "connector",
+        "is_manual": False,
+        "priority": 4,
+        "description": "Vagas remotas reais pela API pública da Remotive",
+    },
+    {
         "name": "manual_search",
         "display_name": "Pesquisa Manual",
         "source_type": "manual",

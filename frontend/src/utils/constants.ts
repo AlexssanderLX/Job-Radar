@@ -52,6 +52,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   lever: 'Lever',
   gupy: 'Gupy',
   github: 'GitHub',
+  remotive: 'Remotive',
   manual_search: 'Pesquisa manual',
 }
 
