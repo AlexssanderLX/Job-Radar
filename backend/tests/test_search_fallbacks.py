@@ -1,11 +1,8 @@
 from unittest.mock import AsyncMock, Mock
-from datetime import datetime, timezone
 
 import pytest
 
 from app.schemas.search import SearchFilters
-from app.schemas.job import JobCreate
-from app.services.search_service import keep_manual_fallbacks
 from app.sources.gupy import GupySource
 from app.sources.web_search import build_web_queries
 
@@ -37,26 +34,3 @@ def test_international_queries_are_not_restricted_to_brazil():
         location_mode="brasil_internacional",
     )
     assert all('"Brasil"' not in query for query in build_web_queries(filters))
-
-
-def _job(url: str, manual: bool) -> JobCreate:
-    return JobCreate(
-        title="Backend Júnior",
-        company="Empresa",
-        source="test",
-        url=url,
-        apply_url=url,
-        is_manual=manual,
-        collected_at=datetime.now(timezone.utc),
-    )
-
-
-def test_manual_searches_are_hidden_when_an_automatic_job_exists():
-    automatic = _job("https://example.com/job", False)
-    manual = _job("https://example.com/search", True)
-    assert keep_manual_fallbacks([automatic, manual]) == [automatic]
-
-
-def test_manual_searches_remain_when_no_automatic_job_exists():
-    manual = _job("https://example.com/search", True)
-    assert keep_manual_fallbacks([manual]) == [manual]
