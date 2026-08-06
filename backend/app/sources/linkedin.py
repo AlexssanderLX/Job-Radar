@@ -7,7 +7,7 @@ import httpx
 from bs4 import BeautifulSoup
 
 from app.core.config import settings
-from app.core.expansions import detect_level
+from app.core.expansions import detect_level, expand_roles_multi
 from app.schemas.job import JobCreate
 from app.schemas.search import SearchFilters
 from app.sources.base import BaseSource
@@ -66,14 +66,22 @@ class LinkedInSource(BaseSource):
 
     async def search(self, filters: SearchFilters) -> list[JobCreate]:
         roles = filters.roles or ([filters.role] if filters.role else [])
-        keywords = " OR ".join(roles)
         location = ""
         if filters.location_mode in ("estado", "cidade", "brasil"):
             location = filters.location or "Brasil"
 
-        page_limit = min(filters.max_results, 50)
-        starts = range(0, page_limit, 10)
-        params_base = {"keywords": keywords, "location": location}
+        page_limit = min(filters.max_results, 100)
+        preferred_terms = []
+        for role in roles:
+            variants = expand_roles_multi([role]) or [role]
+            preferred_terms.append(variants[0])
+        keywords = " OR ".join(dict.fromkeys(preferred_terms or roles))
+        requests = [
+            {"keywords": keywords, "location": location, "start": start}
+            for start in range(0, page_limit, 10)
+        ]
+
+        params_base: dict[str, str] = {}
         if filters.days_ago:
             params_base["f_TPR"] = f"r{filters.days_ago * 86400}"
 
@@ -87,13 +95,30 @@ class LinkedInSource(BaseSource):
                 headers=headers,
                 follow_redirects=True,
             ) as client:
-                pages = await asyncio.gather(*(
-                    client.get(SEARCH_URL, params={**params_base, "start": start})
-                    for start in starts
-                ), return_exceptions=True)
+                search_semaphore = asyncio.Semaphore(2)
+
+                async def fetch_search_page(request_params: dict):
+                    async with search_semaphore:
+                        for attempt in range(3):
+                            try:
+                                response = await client.get(
+                                    SEARCH_URL, params={**request_params, **params_base}
+                                )
+                                if response.status_code != 429:
+                                    return response
+                                retry_after = response.headers.get("Retry-After")
+                                delay = float(retry_after) if retry_after and retry_after.isdigit() else 0.75 * (attempt + 1)
+                                await asyncio.sleep(min(delay, 3.0))
+                            except Exception as exc:
+                                if attempt == 2:
+                                    return exc
+                                await asyncio.sleep(0.5 * (attempt + 1))
+                        return None
+
+                pages = await asyncio.gather(*(fetch_search_page(params) for params in requests))
                 cards_by_id: dict[str, dict] = {}
                 for response in pages:
-                    if isinstance(response, Exception) or response.status_code != 200:
+                    if response is None or isinstance(response, Exception) or response.status_code != 200:
                         continue
                     for card in parse_search_cards(response.text):
                         cards_by_id[card["id"]] = card

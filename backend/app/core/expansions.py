@@ -17,6 +17,10 @@ ROLE_EXPANSIONS: dict[str, list[str]] = {
         "Backend Developer", "Desenvolvedor Backend", "Back-end Developer",
         "Software Engineer", "Software Developer",
     ],
+    "desenvolvedor backend": [
+        "Backend Developer", "Desenvolvedor Backend", "Back-end Developer",
+        "Software Engineer", "Software Developer",
+    ],
     "backend python": [
         "Python Developer", "Backend Python", "Python Engineer",
         "Software Engineer Python", "Desenvolvedor Python",
