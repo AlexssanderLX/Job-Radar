@@ -62,6 +62,7 @@ export const api = {
     data: Partial<Pick<Job, 'is_favorite' | 'is_hidden' | 'applied' | 'notes' | 'status' | 'applied_at' | 'tags'>>
   ) => request<Job>(`/jobs/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteJob: (id: number) => request<void>(`/jobs/${id}`, { method: 'DELETE' }),
+  clearJobs: () => request<void>('/jobs', { method: 'DELETE' }),
   accessJob: (id: number) =>
     request<LinkAccess>(`/jobs/${id}/access`, { method: 'POST' }),
   recordLinkAccess: (data: {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ExternalLink, Star, Eye, EyeOff, Search, ChevronDown, ChevronUp } from 'lucide-react'
+import { ExternalLink, Star, Eye, EyeOff, Search, ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 import { api } from '../services/api'
 import type { Job } from '../types'
 import { Button } from '../components/ui/Button'
@@ -53,9 +53,10 @@ interface JobDetailDrawerProps {
   onClose: () => void
   onUpdate: (updated: Job) => void
   onAccess: (job: Job) => void
+  onDelete: (job: Job) => void
 }
 
-function JobDetailDrawer({ job, onClose, onUpdate, onAccess }: JobDetailDrawerProps) {
+function JobDetailDrawer({ job, onClose, onUpdate, onAccess, onDelete }: JobDetailDrawerProps) {
   const [notes, setNotes] = useState(job?.notes ?? '')
   const [status, setStatus] = useState(job?.status ?? 'new')
   const [saving, setSaving] = useState(false)
@@ -173,6 +174,7 @@ function JobDetailDrawer({ job, onClose, onUpdate, onAccess }: JobDetailDrawerPr
             <ExternalLink size={14} /> Abrir vaga
           </a>
           <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => onDelete(job)}><Trash2 size={13}/>Excluir</Button>
             <Button variant="outline" size="sm" onClick={onClose}>Cancelar</Button>
             <Button size="sm" onClick={save} loading={saving}>Salvar</Button>
           </div>
@@ -236,6 +238,24 @@ export default function Jobs() {
     void api.accessJob(job.id).catch(() => setError('O link abriu, mas o acesso não pôde ser salvo.'))
   }, [handleUpdate])
 
+  const handleDelete = useCallback(async (job: Job) => {
+    if (!confirm(`Excluir a vaga "${job.title}" do banco local?`)) return
+    try {
+      await api.deleteJob(job.id)
+      setJobs((prev) => prev.filter((item) => item.id !== job.id))
+      setSelectedJob(null)
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)) }
+  }, [])
+
+  const handleClearJobs = useCallback(async () => {
+    if (!confirm(`Apagar todas as ${jobs.length} vagas armazenadas? Cargos, fontes, perfis e histórico de links serão preservados.`)) return
+    try {
+      await api.clearJobs()
+      setJobs([])
+      setSelectedJob(null)
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)) }
+  }, [jobs.length])
+
   const displayed = jobs.filter((j) => {
     if (j.is_hidden) return false
     if (showFavorites && !j.is_favorite) return false
@@ -253,11 +273,7 @@ export default function Jobs() {
       <PageHeader
         title="Vagas"
         description={`${jobs.length} vagas salvas`}
-        action={
-          <Button variant="outline" size="sm" onClick={fetchJobs} loading={loading}>
-            Atualizar
-          </Button>
-        }
+        action={<div className="flex gap-2">{jobs.length > 0 && <Button variant="outline" size="sm" onClick={handleClearJobs}><Trash2 size={13}/>Limpar vagas</Button>}<Button variant="outline" size="sm" onClick={fetchJobs} loading={loading}>Atualizar</Button></div>}
       />
 
       {/* Filters */}
@@ -365,6 +381,7 @@ export default function Jobs() {
                       >
                         <EyeOff size={13} />
                       </button>
+                      <button aria-label={`Excluir ${job.title}`} onClick={() => void handleDelete(job)} className="p-1.5 rounded hover:bg-red-950/40 text-zinc-600 hover:text-red-400 transition-colors"><Trash2 size={13}/></button>
                     </>
                   )}
                   <a
@@ -389,6 +406,7 @@ export default function Jobs() {
         onClose={() => setSelectedJob(null)}
         onUpdate={handleUpdate}
         onAccess={handleAccess}
+        onDelete={(job) => void handleDelete(job)}
       />
     </div>
   )

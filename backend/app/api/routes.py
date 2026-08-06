@@ -3,10 +3,11 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import delete, update
 from sqlmodel import select, desc
 
 from app.database.db import get_session
-from app.models.job import Job, SearchHistory, SavedFilter
+from app.models.job import Job, LinkAccess, SearchHistory, SavedFilter
 from app.schemas.job import JobRead, JobUpdate
 from app.schemas.search import (
     SavedFilterCreate,
@@ -82,6 +83,14 @@ async def list_jobs(
         jobs = [j for j in jobs if s in j.title.lower() or s in j.company.lower()]
 
     return jobs
+
+
+@router.delete("/jobs", status_code=204)
+async def clear_jobs(db: AsyncSession = Depends(get_session)):
+    """Remove all collected job records while preserving configuration and history."""
+    await db.execute(update(LinkAccess).where(LinkAccess.job_id != None).values(job_id=None))
+    await db.execute(delete(Job))
+    await db.commit()
 
 
 @router.get("/jobs/{job_id}", response_model=JobRead)
