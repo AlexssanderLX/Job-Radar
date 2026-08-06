@@ -14,6 +14,8 @@ class Source(SQLModel, table=True):
     active: bool = True
     priority: int = 0
     description: Optional[str] = None
+    domain: Optional[str] = None
+    search_url_template: Optional[str] = None
     last_run: Optional[datetime] = None
     last_error: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -8,6 +8,7 @@ from sqlmodel import select
 
 from app.core.expansions import expand_roles_multi, expand_levels
 from app.models.job import Job, SearchHistory
+from app.models.source import Source
 from app.schemas.job import JobCreate
 from app.schemas.search import SearchFilters, SearchResult
 from app.services.deduplication import deduplicate_jobs
@@ -18,6 +19,7 @@ from app.sources.gupy import GupySource
 from app.sources.github import GitHubSource
 from app.sources.manual_search import ManualSearchSource
 from app.sources.web_search import IndexedWebSearchSource
+from app.sources.configured import ConfiguredManualSource
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +38,16 @@ SOURCE_MAP = {s.name: s for s in ALL_SOURCES}
 async def run_search(filters: SearchFilters, db: AsyncSession) -> SearchResult:
     start = time.monotonic()
 
-    active_source_names = filters.sources if filters.sources else list(SOURCE_MAP.keys())
-    active_sources = [SOURCE_MAP[n] for n in active_source_names if n in SOURCE_MAP]
+    configured_result = await db.execute(select(Source).where(Source.active == True))
+    configured_sources = configured_result.scalars().all()
+    configured_map = {
+        source.name: ConfiguredManualSource(source)
+        for source in configured_sources
+        if source.name not in SOURCE_MAP and source.search_url_template
+    }
+    available_sources = {**SOURCE_MAP, **configured_map}
+    active_source_names = filters.sources if filters.sources else list(available_sources.keys())
+    active_sources = [available_sources[n] for n in active_source_names if n in available_sources]
 
     # Expand all roles together
     roles_to_expand = filters.roles if filters.roles else ([filters.role] if filters.role else [])

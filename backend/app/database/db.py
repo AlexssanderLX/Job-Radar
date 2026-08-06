@@ -28,6 +28,8 @@ async def run_migrations() -> None:
         "ALTER TABLE jobs ADD COLUMN first_accessed_at TEXT",
         "ALTER TABLE jobs ADD COLUMN last_accessed_at TEXT",
         "ALTER TABLE jobs ADD COLUMN access_count INTEGER DEFAULT 0",
+        "ALTER TABLE sources ADD COLUMN domain TEXT",
+        "ALTER TABLE sources ADD COLUMN search_url_template TEXT",
     ]
     async with engine.begin() as conn:
         for sql in migrations:
