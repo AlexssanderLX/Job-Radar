@@ -33,7 +33,7 @@ export function CatalogPage({ kind }: { kind: CatalogKind }) {
       load()
     } catch (e) { setError(e instanceof Error ? e.message : String(e)) }
   }
-  return <div className="space-y-4 max-w-5xl">
+  return <div className="space-y-6 max-w-7xl">
     <PageHeader title={title} description={`Catálogo configurável · ${items.length} itens`} action={<Button size="sm" onClick={() => setEditing(null)}><Plus size={14}/>Adicionar</Button>} />
     <div className="relative max-w-sm"><Search size={15} className="absolute left-3 top-2.5 text-zinc-500"/><input aria-label={`Pesquisar ${title}`} value={query} onChange={(e) => setQuery(e.target.value)} className="h-9 w-full rounded-md border border-zinc-700 bg-zinc-900 pl-9 pr-3 text-sm" placeholder="Pesquisar por nome…"/></div>
     {error && <p className="rounded-md border border-red-900 bg-red-950/40 p-3 text-sm text-red-300">{error}</p>}

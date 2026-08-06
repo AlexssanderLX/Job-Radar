@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Search, Briefcase, BookMarked, Tag, Zap, Globe,
-  History, Layers3, Link2, ChevronLeft, ChevronRight, Radar,
+  History, Layers3, Link2, ChevronLeft, ChevronRight,
 } from 'lucide-react'
+import brandMark from '../../assets/brand/job-radar-mark.png'
 
 const NAV_ITEMS = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,23 +31,23 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const sidebarContent = (
     <div
       className={[
-        'flex flex-col h-full bg-zinc-950 border-r border-zinc-800 transition-all duration-200',
-        collapsed ? 'w-20' : 'w-64',
+        'flex flex-col h-full bg-[#09090b] border-r border-zinc-800 transition-all duration-200',
+        collapsed ? 'w-20' : 'w-72',
       ].join(' ')}
     >
       {/* Logo */}
-      <div className={['flex items-center h-16 border-b border-zinc-800 shrink-0', collapsed ? 'justify-center px-2' : 'px-5 gap-3'].join(' ')}>
-        <Radar size={24} className="text-indigo-400 shrink-0" />
+      <div className={['flex items-center h-20 border-b border-zinc-800 shrink-0', collapsed ? 'justify-center px-2' : 'px-6 gap-3'].join(' ')}>
+        <img src={brandMark} alt="" className="h-10 w-10 shrink-0 object-cover" />
         {!collapsed && (
           <div className="flex items-center gap-2 min-w-0">
             <span className="font-bold text-zinc-100 text-base tracking-tight truncate">Job Radar</span>
-            <span className="text-xs px-1.5 py-0.5 bg-green-900/60 text-green-400 rounded text-[10px] border border-green-800/50">local</span>
+            <span className="px-2 py-0.5 bg-violet-950/50 text-violet-300 rounded-sm text-[11px] border border-violet-800/50">local</span>
           </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map(({ path, label, icon: Icon }) => {
           const isActive = path === '/'
             ? location.pathname === '/'
@@ -58,11 +59,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               onClick={onMobileClose}
               title={collapsed ? label : undefined}
               className={[
-                'flex items-center rounded-md text-sm font-medium transition-colors group relative',
-                collapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-11 px-3 gap-3',
+                'flex items-center rounded-sm text-sm font-medium transition-colors group relative',
+                collapsed ? 'h-11 w-11 justify-center mx-auto' : 'h-12 px-4 gap-3',
                 isActive
-                  ? 'bg-indigo-600/20 text-indigo-400'
-                  : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100',
+                  ? 'bg-violet-950/60 text-violet-300 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-violet-500'
+                  : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100',
               ].join(' ')}
             >
               <Icon size={19} className="shrink-0" />

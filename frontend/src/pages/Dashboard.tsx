@@ -25,8 +25,8 @@ function StatCard({ icon: Icon, label, value, color }: {
   color: string
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg border border-zinc-800 bg-zinc-900/50">
-      <div className={`p-2 rounded-md ${color}`}>
+    <div className="flex items-center gap-4 border-y border-zinc-800 px-1 py-5">
+      <div className={`p-2 ${color}`}>
         <Icon size={16} className="text-current" />
       </div>
       <div>
@@ -71,7 +71,7 @@ export default function Dashboard() {
   const d = data!
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-8 max-w-7xl">
       <PageHeader
         title="Dashboard"
         description="Visão geral do Job Radar"
@@ -83,7 +83,7 @@ export default function Dashboard() {
       />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-5">
         <StatCard icon={Briefcase} label="Total de vagas" value={d.total_jobs} color="bg-zinc-800 text-zinc-300" />
         <StatCard icon={TrendingUp} label="Novas" value={d.new_jobs} color="bg-indigo-900/50 text-indigo-400" />
         <StatCard icon={Star} label="Favoritas" value={d.favorite_jobs} color="bg-yellow-900/50 text-yellow-400" />

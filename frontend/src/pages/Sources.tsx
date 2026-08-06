@@ -20,7 +20,7 @@ export default function SourcesPage() {
     catch (e) { setError(e instanceof Error ? e.message : String(e)) }
   }
 
-  return <div className="space-y-4 max-w-5xl">
+  return <div className="space-y-6 max-w-7xl">
     <PageHeader title="Fontes" description="Onde o Job Radar procura vagas" action={<Button size="sm" onClick={() => setEditing(null)}><Plus size={14}/>Adicionar fonte</Button>}/>
     {error && <p className="rounded-md border border-red-900 bg-red-950/40 p-3 text-sm text-red-300">{error}</p>}
     <div className="grid gap-3 sm:grid-cols-2">{items.map((item) => <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-4">

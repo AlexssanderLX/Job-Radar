@@ -10,7 +10,7 @@ export function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="flex w-full min-h-screen bg-zinc-950">
+    <div className="flex w-full min-h-screen bg-[#09090b]">
       <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Mobile header */}
@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
             <Menu size={20} />
           </button>
         </div>
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <main className="flex-1 p-5 md:p-8 xl:p-10 overflow-auto">
           {children}
         </main>
       </div>

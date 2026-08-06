@@ -11,15 +11,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   default:
-    'bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50',
+    'bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-50',
   ghost:
-    'bg-transparent text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100',
+    'bg-transparent text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100',
   destructive:
     'bg-red-600 text-white hover:bg-red-700',
   outline:
-    'border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100',
+    'border border-zinc-800 bg-transparent text-zinc-300 hover:border-zinc-600 hover:bg-zinc-900 hover:text-zinc-100',
   link:
-    'bg-transparent text-indigo-400 hover:text-indigo-300 underline-offset-2 hover:underline p-0',
+    'bg-transparent text-violet-400 hover:text-violet-300 underline-offset-2 hover:underline p-0',
 }
 
 const sizeClasses: Record<Size, string> = {
@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled ?? loading}
         className={[
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex items-center justify-center rounded-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 disabled:pointer-events-none disabled:opacity-50',
           variantClasses[variant],
           sizeClasses[size],
           className,

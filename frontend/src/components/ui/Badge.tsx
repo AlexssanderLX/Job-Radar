@@ -9,7 +9,7 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<Variant, string> = {
-  default: 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30',
+  default: 'bg-violet-950/30 text-violet-300 border-violet-700/60',
   secondary: 'bg-zinc-800 text-zinc-300 border-zinc-700',
   destructive: 'bg-red-600/20 text-red-400 border-red-600/30',
   outline: 'bg-transparent text-zinc-400 border-zinc-700',
@@ -21,7 +21,7 @@ export function Badge({ variant = 'default', children, className = '' }: BadgePr
   return (
     <span
       className={[
-        'inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs font-medium',
+        'inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 text-xs font-medium',
         variantClasses[variant],
         className,
       ].join(' ')}

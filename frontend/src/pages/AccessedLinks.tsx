@@ -29,7 +29,7 @@ export default function AccessedLinks() {
     if (!confirm('Limpar todo o histórico? As vagas salvas serão preservadas.')) return
     await api.clearLinkAccesses(); await load()
   }
-  return <div className="space-y-4 max-w-5xl">
+  return <div className="space-y-6 max-w-7xl">
     <PageHeader title="Links acessados" description={`${data.total} links abertos pelo Job Radar`} action={data.total ? <Button variant="outline" size="sm" onClick={clear}><Trash2 size={14}/>Limpar histórico</Button> : undefined}/>
     <div className="flex flex-wrap gap-2">
       <div className="relative"><Search size={14} className="absolute left-3 top-2.5 text-zinc-500"/><input aria-label="Pesquisar links" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Título, empresa ou URL…" className="h-9 w-64 rounded-md border border-zinc-700 bg-zinc-900 pl-9 pr-3 text-sm"/></div>

@@ -1,44 +1,42 @@
-# Design QA — escala da página de vagas
+# Design QA — identidade Signal List
 
-- Source visual truth: `C:\Users\ALEXSS~1\AppData\Local\Temp\codex-clipboard-4b34ed61-01d1-4063-a3a6-67a7c64674ea.png`
-- Implementation screenshot: `C:\Users\Alexssander\Desktop\ProjectsDev\JobRadar\implementation-jobs-large.png`
-- Side-by-side evidence: `C:\Users\Alexssander\Desktop\ProjectsDev\JobRadar\design-comparison-jobs.png`
-- Viewport: 1592 × 752 CSS px
-- Source pixels: 1592 × 752
-- Implementation pixels: 1592 × 752
-- Device scale/density normalization: equal pixel and CSS dimensions; no scaling required
-- State: dark theme, `/jobs`, populated list
+- Referência visual: `C:\Users\Alexssander\.codex\generated_images\019fa5fb-25cb-7b23-ba80-1899b82beccb\exec-15dfc8a6-0062-4776-969a-c91b4d5e6555.png`
+- Implementação: `C:\Users\Alexssander\Desktop\ProjectsDev\JobRadar\implementation-signal-list.png`
+- Comparação lado a lado: `C:\Users\Alexssander\Desktop\ProjectsDev\JobRadar\design-comparison-signal-list.png`
+- Telas auxiliares: `implementation-signal-dashboard.png` e `implementation-signal-search.png`
+- Viewport do navegador: 1440 × 1024 CSS px, DPR 1
+- Referência: 1487 × 1058 px
+- Captura visível do navegador incorporado: 851 × 1020 px
+- Estado: tema escuro, lista populada com 251 vagas, página 1
 
-## Full-view comparison evidence
+## Comparação geral
 
-The original capture used a 14px root, approximately 206px sidebar and a narrow job column, leaving a large unused region. The implementation uses a 16px root, 256px sidebar, larger controls and a 1152px maximum job-list width. Text and row actions are readable while the list remains scannable. There is no horizontal page overflow.
+A implementação reproduz a direção escolhida: preto quase absoluto, roxo preciso apenas para seleção e ação, marca JR, superfícies planas, divisores finos, tipografia mais legível e listagem orientada a varredura. O conteúdo e a nomenclatura existentes do Job Radar foram preservados.
 
-## Focused-region comparison evidence
+## Regiões verificadas
 
-The sidebar/navigation and first visible job rows were readable in the full-width side-by-side image, so a separate crop was unnecessary. Titles moved from small regular text to 16px semibold; metadata moved to 14px; rows use 20px horizontal and 16px vertical padding; navigation icons and targets increased.
+- Navegação lateral: marca, contraste, item ativo e ritmo vertical compatíveis com a referência.
+- Cabeçalho e filtros: hierarquia clara, campos planos e foco visual sem brilho ou gradientes.
+- Lista: score, status, nível, título, metadados e ações possuem colunas previsíveis.
+- Dashboard e Pesquisa: os mesmos tokens de cor, borda, tipografia e espaçamento foram aplicados.
+- Acessibilidade visual: estados ativos não dependem apenas da cor; ícones, texto e borda lateral trabalham juntos.
 
-## Required fidelity surfaces
+## Interações e runtime
 
-- Fonts and typography: system font preserved; root restored to 16px; hierarchy and weights improved.
-- Spacing and layout rhythm: sidebar, controls, rows and content width enlarged consistently.
-- Colors and tokens: existing dark zinc/indigo palette preserved.
-- Image quality and assets: no raster product imagery is present; existing Lucide icons remain sharp and appropriately scaled.
-- Copy/content: existing Portuguese labels and live vacancy content preserved.
+- `/jobs`, `/search` e `/` abriram com conteúdo real.
+- Paginação validada: página 2 selecionada e faixa alterada para `51–100 de 251 vaga(s)`.
+- Os links `Abrir vaga` foram medidos dentro do viewport (limite direito 1390 em viewport de 1440 px).
+- Build de produção, ESLint e `git diff --check` concluídos sem erros.
+- Nenhum overlay de erro de runtime apareceu nas telas verificadas.
 
-## Interaction and runtime verification
+## Histórico de correções
 
-- Search input tested by filtering for `DevOps` and clearing it successfully.
-- Browser console warnings/errors: none.
-- Root font verified: 16px.
-- Viewport verified: 1592 × 752.
+- P1: ações poderiam perder espaço quando a barra lateral estivesse aberta em larguras intermediárias. Corrigido com quebra responsiva no breakpoint `xl` e ações flexíveis.
+- P2: o visual anterior dependia de muitos cartões arredondados e azul/índigo genérico. Corrigido com superfícies planas, bordas discretas e paleta preta/roxa consistente.
+- P2: marca anterior tinha aparência genérica. Corrigido com símbolo JR próprio no cabeçalho lateral.
 
-## Comparison history
+## Pendências
 
-- P1 original: global 14px root made nearly all interface text and controls undersized. Fixed with a 16px root and verified in the implementation screenshot.
-- P2 original: job content was constrained to a narrow column with substantial unused desktop space. Fixed with `max-w-6xl` and larger row/control sizing; verified without horizontal overflow.
-
-## Remaining findings
-
-No actionable P0, P1 or P2 findings remain. The implementation intentionally shows fewer rows above the fold in exchange for the readability requested by the user.
+Nenhuma pendência P0, P1 ou P2 permanece.
 
 final result: passed
