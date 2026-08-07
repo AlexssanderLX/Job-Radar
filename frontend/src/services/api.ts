@@ -14,7 +14,7 @@ import type {
   LinkAccessPage,
 } from '../types'
 
-const BASE = 'http://localhost:8000/api'
+const BASE = 'http://localhost:8010/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {

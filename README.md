@@ -6,7 +6,7 @@ Aplicação local para pesquisar, comparar e acompanhar vagas usando múltiplos 
 
 1. Instale Python 3.11+ e Node.js 20+.
 2. Execute `start-all.bat`.
-3. Abra `http://localhost:5173`.
+3. Abra `http://localhost:5174`.
 
 Também é possível iniciar separadamente com `start-backend.bat` e `start-frontend.bat`.
 
@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-A API FastAPI fica em `http://localhost:8000` e a documentação em `http://localhost:8000/docs`. O SQLite é criado localmente e não é versionado.
+A API FastAPI fica em `http://localhost:8010` e a documentação em `http://localhost:8010/docs`. O SQLite é criado localmente e não é versionado. O frontend usa `http://localhost:5174`, evitando conflito com o Lead Finder em `http://localhost:8000`.
 
 ## Pesquisa web indexada (opcional)
 

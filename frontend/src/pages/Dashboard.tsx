@@ -63,7 +63,7 @@ export default function Dashboard() {
       <div className="p-4 rounded-lg border border-red-800/50 bg-red-950/30 text-red-400 text-sm">
         Erro ao carregar dashboard: {error}
         <br />
-        <span className="text-xs text-red-500">Verifique se o backend está rodando em localhost:8000</span>
+        <span className="text-xs text-red-500">Verifique se o backend está rodando em localhost:8010</span>
       </div>
     )
   }
